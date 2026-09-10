@@ -1,5 +1,9 @@
-from mcp.server import MCPServer
+from collections import Counter
+
 import onnx
+from onnx import TensorProto
+from mcp.server import MCPServer
+
 
 mcp = MCPServer("edge-deploy-mcp")
 
@@ -12,17 +16,57 @@ def ping() -> dict[str, str]:
         "server": "edge-deploy-mcp",
     }
 
+
+def get_tensor_info(value_info):
+    tensor_type = value_info.type.tensor_type
+
+    shape = []
+    for dim in tensor_type.shape.dim:
+        if dim.HasField("dim_value"):
+            shape.append(dim.dim_value)
+        elif dim.HasField("dim_param"):
+            shape.append(dim.dim_param)
+        else:
+            shape.append(None)
+
+    return {
+        "name": value_info.name,
+        "shape": shape,
+        "dtype": TensorProto.DataType.Name(tensor_type.elem_type),
+    }
+
+
 @mcp.tool()
 def inspect_onnx(model_path: str) -> dict:
     """Inspect basic information of an ONNX model."""
 
     model = onnx.load(model_path)
 
+    operators = Counter(
+        node.op_type for node in model.graph.node
+    )
+
     return {
+        "ir_version": model.ir_version,
+        "opsets": [
+            {
+                "domain": x.domain or "ai.onnx",
+                "version": x.version,
+            }
+            for x in model.opset_import
+        ],
         "node_count": len(model.graph.node),
-        "inputs": [x.name for x in model.graph.input],
-        "outputs": [x.name for x in model.graph.output],
+        "inputs": [
+            get_tensor_info(x)
+            for x in model.graph.input
+        ],
+        "outputs": [
+            get_tensor_info(x)
+            for x in model.graph.output
+        ],
+        "operators": dict(operators),
     }
+
 
 if __name__ == "__main__":
     mcp.run()
