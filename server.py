@@ -68,5 +68,34 @@ def inspect_onnx(model_path: str) -> dict:
     }
 
 
+@mcp.tool()
+def check_model_compatibility(model_path: str) -> dict:
+    """Check basic ONNX model compatibility issues."""
+
+    model = onnx.load(model_path)
+
+    issues = []
+
+    # 检查动态输入尺寸
+    for input_info in model.graph.input:
+        for dim in input_info.type.tensor_type.shape.dim:
+            if dim.HasField("dim_param") or not dim.HasField("dim_value"):
+                issues.append(
+                    f"输入 {input_info.name} 包含动态维度"
+                )
+                break
+
+    # 检查 opset
+    opsets = {
+        x.domain or "ai.onnx": x.version
+        for x in model.opset_import
+    }
+
+    return {
+        "compatible": len(issues) == 0,
+        "opsets": opsets,
+        "issues": issues,
+    }
+
 if __name__ == "__main__":
     mcp.run()
