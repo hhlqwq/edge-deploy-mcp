@@ -27,7 +27,7 @@ async def main():
         print("content:", result.content)
         print("structured_content:", result.structured_content)
 
-        
+
         result = await client.call_tool(
             "check_model_compatibility",
             {
@@ -38,5 +38,15 @@ async def main():
         print("\n=== check_model_compatibility ===")
         print(result.content)
 
+
+        result = await client.call_tool(
+            "get_platform_info",
+            {
+                "platform": "x5"
+            },
+        )
+
+        print("\n=== get_platform_info ===")
+        print(result.content)
 if __name__ == "__main__":
     asyncio.run(main())
