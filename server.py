@@ -3,7 +3,7 @@ from collections import Counter
 import onnx
 from onnx import TensorProto
 from mcp.server import MCPServer
-from adapters.horizon.x5 import HorizonX5Adapter
+from adapters.registry import get_adapter
 
 mcp = MCPServer("edge-deploy-mcp")
 
@@ -102,11 +102,9 @@ def check_model_compatibility(model_path: str) -> dict:
 def get_platform_info(platform: str) -> dict:
     """Return information for a supported edge AI platform."""
 
-    if platform.lower() == "x5":
-        adapter = HorizonX5Adapter()
-        return adapter.get_platform_info()
+    adapter = get_adapter(platform)
+    return adapter.get_platform_info()
 
-    raise ValueError(f"Unsupported platform: {platform}")
 
 if __name__ == "__main__":
     mcp.run()
