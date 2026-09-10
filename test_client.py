@@ -48,5 +48,17 @@ async def main():
 
         print("\n=== get_platform_info ===")
         print(result.content)
+
+
+        result = await client.call_tool(
+            "compile_model",
+            {
+                "platform": "x5",
+                "model_path": "test.onnx",
+            },
+        )
+
+        print("\n=== compile_model ===")
+        print(result.content)
 if __name__ == "__main__":
     asyncio.run(main())

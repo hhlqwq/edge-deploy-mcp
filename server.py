@@ -106,5 +106,19 @@ def get_platform_info(platform: str) -> dict:
     return adapter.get_platform_info()
 
 
+@mcp.tool()
+def compile_model(
+    platform: str,
+    model_path: str,
+) -> dict:
+    """Compile a model for the target edge AI platform."""
+
+    adapter = get_adapter(platform)
+
+    return adapter.compile_model(
+        model_path=model_path,
+    )
+
+
 if __name__ == "__main__":
     mcp.run()
