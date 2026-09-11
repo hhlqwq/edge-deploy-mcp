@@ -1,8 +1,10 @@
 from adapters.horizon.x5 import HorizonX5Adapter
+from adapters.horizon.j6p import HorizonJ6PAdapter
 
 
 ADAPTERS = {
     "x5": HorizonX5Adapter,
+    "j6p": HorizonJ6PAdapter,
 }
 
 

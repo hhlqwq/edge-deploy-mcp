@@ -42,7 +42,7 @@ async def main():
         result = await client.call_tool(
             "get_platform_info",
             {
-                "platform": "x5"
+                "platform": "j6p"
             },
         )
 
@@ -53,8 +53,8 @@ async def main():
         result = await client.call_tool(
             "compile_model",
             {
-                "platform": "x5",
-                "model_path": "test.onnx",
+                "platform": "j6p",
+                "model_path": "/data/users/hailong.he/github/horizon_models/tmp/mcp_test/model_fp32.onnx",
             },
         )
 
