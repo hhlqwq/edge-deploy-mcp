@@ -32,16 +32,34 @@ horizon:
 
 mtk:
   g720:
-    # MTK G720 Docker 容器
-    # MTK G720 compile Docker container.
+    # Container name used for MTK NeuroPilot SDK environment
+    # MTK NeuroPilot SDK 编译环境 Docker 容器名称
     container: hhl_g720_8011
 
-    # SSH 配置后填写
-    # Fill after SSH configuration.
+    # SSH alias configured in ~/.ssh/config
+    # 板端 SSH 别名（对应 G720 开发板）
     ssh_host: g720
 
-    # MDLA 配置
-    # MDLA configuration.
+    # NPU target type
+    # NPU 类型
     target: mdla
 
-    remote_dir: /root/hehailong/mcp_test
+    # Target architecture for NCC compiler
+    # NCC 编译目标架构，MT8189 / Genio 720 使用 MDLA 5.3
+    ncc_arch: mdla5.3
+
+    # Local project mount path inside container
+    # Docker 内挂载的 MTK 模型工程根目录
+    mount_root: /data/users/hailong.he/github/mtk_models
+
+    # NCC-TFLite compiler path inside container
+    # MTK NeuroPilot SDK NCC 编译器路径
+    compiler: /opt/mtk/NeuroPilotSDK/neuropilot-sdk-basic-8.0.11-build20260211/neuron_sdk/host/bin/ncc-tflite
+
+    # NCC runtime library path required during compilation
+    # NCC 编译依赖动态库路径，需要加入 LD_LIBRARY_PATH
+    ncc_lib: /opt/mtk/NeuroPilotSDK/neuropilot-sdk-basic-8.0.11-build20260211/neuron_sdk/host/lib
+
+    # Working directory on target board
+    # G720 板端模型部署目录
+    remote_dir: /root/hailong.he
