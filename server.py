@@ -120,5 +120,18 @@ def compile_model(
     )
 
 
+@mcp.tool()
+def deploy_model(
+    platform: str,
+    model_path: str,
+) -> dict:
+    """Deploy a compiled model to the target edge AI board."""
+
+    adapter = get_adapter(platform)
+
+    return adapter.deploy_model(
+        model_path=model_path,
+    )
+
 if __name__ == "__main__":
     mcp.run()

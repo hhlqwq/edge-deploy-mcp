@@ -1,6 +1,5 @@
 from adapters.base import BasePlatformAdapter
 
-
 class HorizonX5Adapter(BasePlatformAdapter):
 
     def get_platform_info(self) -> dict:
@@ -10,6 +9,16 @@ class HorizonX5Adapter(BasePlatformAdapter):
         }
 
     def compile_model(
+        self,
+        model_path: str,
+    ) -> dict:
+        return {
+            "status": "not_implemented",
+            "platform": "X5",
+            "model_path": model_path,
+        }
+    
+    def deploy_model(
         self,
         model_path: str,
     ) -> dict:

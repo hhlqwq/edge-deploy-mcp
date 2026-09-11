@@ -3,7 +3,6 @@ from pathlib import Path
 
 from adapters.base import BasePlatformAdapter
 
-
 class HorizonJ6PAdapter(BasePlatformAdapter):
 
     CONTAINER_NAME = "hhl_j6_391"
@@ -109,4 +108,49 @@ class HorizonJ6PAdapter(BasePlatformAdapter):
             "model_path": str(model),
             "config_path": str(config_path),
             "hbm_path": str(hbm_path),
+        }
+
+    def deploy_model(
+        self,
+        model_path: str,
+    ) -> dict:
+
+        model = Path(model_path).resolve()
+
+        if not model.exists():
+            raise FileNotFoundError(
+                f"模型不存在: {model}"
+            )
+
+        if model.suffix.lower() != ".hbm":
+            raise ValueError(
+                f"J6P 部署模型必须是 .hbm: {model}"
+            )
+
+        remote_dir = "/root/hehailong/mcp_test"
+        remote_path = f"{remote_dir}/{model.name}"
+
+        result = subprocess.run(
+            [
+                "scp",
+                str(model),
+                f"j6p:{remote_path}",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+
+        if result.returncode != 0:
+            return {
+                "status": "failed",
+                "stage": "deploy",
+                "stderr": result.stderr,
+            }
+
+        return {
+            "status": "success",
+            "platform": "J6P",
+            "local_path": str(model),
+            "remote_path": remote_path,
         }

@@ -22,3 +22,13 @@ class BasePlatformAdapter(ABC):
         Compile model for target platform.
         """
         pass
+
+    @abstractmethod
+    def deploy_model(
+        self,
+        model_path: str,
+    ) -> dict:
+        """
+        Deploy compiled model to target board.
+        """
+        pass
