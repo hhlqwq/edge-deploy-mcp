@@ -10,7 +10,10 @@ mcp = MCPServer("edge-deploy-mcp")
 
 @mcp.tool()
 def ping() -> dict[str, str]:
-    """Check whether the MCP server is working."""
+    """
+    检查MCP服务器是否正常工作
+    Check whether the MCP server is working.
+    """
     return {
         "status": "ok",
         "server": "edge-deploy-mcp",
@@ -38,7 +41,10 @@ def get_tensor_info(value_info):
 
 @mcp.tool()
 def inspect_onnx(model_path: str) -> dict:
-    """Inspect basic information of an ONNX model."""
+    """
+    检查ONNX型号的基本信息
+    Inspect basic information of an ONNX model.
+    """
 
     model = onnx.load(model_path)
 
@@ -70,7 +76,10 @@ def inspect_onnx(model_path: str) -> dict:
 
 @mcp.tool()
 def check_model_compatibility(model_path: str) -> dict:
-    """Check basic ONNX model compatibility issues."""
+    """
+    检查ONNX型号的基本兼容性问题
+    Check basic ONNX model compatibility issues.
+    """
 
     model = onnx.load(model_path)
 
@@ -100,7 +109,10 @@ def check_model_compatibility(model_path: str) -> dict:
 
 @mcp.tool()
 def get_platform_info(platform: str) -> dict:
-    """Return information for a supported edge AI platform."""
+    """
+    返回支持的边缘AI平台的信息
+    Return information for a supported edge AI platform.
+    """
 
     adapter = get_adapter(platform)
     return adapter.get_platform_info()
@@ -111,7 +123,10 @@ def compile_model(
     platform: str,
     model_path: str,
 ) -> dict:
-    """Compile a model for the target edge AI platform."""
+    """
+    为目标边缘AI平台编译模型
+    Compile a model for the target edge AI platform.
+    """
 
     adapter = get_adapter(platform)
 
@@ -125,13 +140,34 @@ def deploy_model(
     platform: str,
     model_path: str,
 ) -> dict:
-    """Deploy a compiled model to the target edge AI board."""
+    """
+    将编译后的模型部署到目标边缘AI板
+    Deploy a compiled model to the target edge AI board.
+    """
 
     adapter = get_adapter(platform)
 
     return adapter.deploy_model(
         model_path=model_path,
     )
+
+
+@mcp.tool()
+def verify_model(
+    platform: str,
+    model_path: str,
+) -> dict:
+    """
+    验证目标板上的已部署模型
+    Verify deployed model on target board.
+    """
+
+    adapter = get_adapter(platform)
+
+    return adapter.verify_model(
+        model_path=model_path,
+    )
+
 
 if __name__ == "__main__":
     mcp.run()

@@ -154,3 +154,49 @@ class HorizonJ6PAdapter(BasePlatformAdapter):
             "local_path": str(model),
             "remote_path": remote_path,
         }
+    
+
+    def verify_model(
+        self,
+        model_path: str,
+    ) -> dict:
+        """
+        验证部署到目标板的模型
+        Verify deployed model on target board.
+        """
+
+        model = Path(model_path).resolve()
+
+        if model.suffix.lower() != ".hbm":
+            raise ValueError(
+                f"J6P 验证模型必须是 .hbm: {model}"
+            )
+
+        remote_path = (
+            f"/root/hehailong/mcp_test/{model.name}"
+        )
+
+        result = subprocess.run(
+            [
+                "ssh",
+                "j6p",
+                f"ls -lh {remote_path}",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
+        if result.returncode != 0:
+            return {
+                "status": "failed",
+                "stage": "verify",
+                "stderr": result.stderr,
+            }
+
+        return {
+            "status": "success",
+            "platform": "J6P",
+            "remote_path": remote_path,
+            "info": result.stdout.strip(),
+        }
