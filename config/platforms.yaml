@@ -1,0 +1,47 @@
+# 平台部署配置
+# Platform deployment configuration.
+
+horizon:
+  j6p:
+    # J6P 编译 Docker 容器
+    # J6P compile Docker container.
+    container: hhl_j6_391
+
+    # J6P SSH 别名
+    # J6P SSH alias.
+    ssh_host: j6p
+
+    # BPU 架构
+    # BPU architecture.
+    march: nash-p
+
+    # Docker 挂载根目录
+    # Docker mounted root directory.
+    mount_root: /data/users/hailong.he/github/horizon_models
+
+    # 板端部署目录
+    # Remote deployment directory.
+    remote_dir: /root/hehailong/mcp_test
+
+  x5:
+    container: hhl_x5
+    ssh_host: x5
+    march: nash-e
+    remote_dir: /root/hehailong/mcp_test
+
+
+mtk:
+  g720:
+    # MTK G720 Docker 容器
+    # MTK G720 compile Docker container.
+    container: hhl_g720_8011
+
+    # SSH 配置后填写
+    # Fill after SSH configuration.
+    ssh_host: g720
+
+    # MDLA 配置
+    # MDLA configuration.
+    target: mdla
+
+    remote_dir: /root/hehailong/mcp_test

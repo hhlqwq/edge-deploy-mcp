@@ -2,16 +2,27 @@ import subprocess
 from pathlib import Path
 
 from adapters.base import BasePlatformAdapter
+from adapters.horizon.utils import parse_horizon_compile_output
+
+from config.loader import get_platform_config
 
 class HorizonJ6PAdapter(BasePlatformAdapter):
 
-    CONTAINER_NAME = "hhl_j6_391"
-    MARCH = "nash-p"
-
-    # 当前 J6 Docker 挂载的宿主机目录
-    MOUNT_ROOT = Path(
-        "/data/users/hailong.he/github/horizon_models"
+    # 加载 J6P 平台配置
+    # Load J6P platform configuration.
+    PLATFORM_CONFIG = get_platform_config(
+        "horizon",
+        "j6p",
     )
+
+    # Docker 挂载目录
+    # Docker mounted directory.
+    MOUNT_ROOT = Path(
+        PLATFORM_CONFIG["mount_root"]
+    )
+
+    CONTAINER_NAME = PLATFORM_CONFIG["container"]
+    MARCH = PLATFORM_CONFIG["march"]
 
     def get_platform_info(self) -> dict:
         return {
@@ -20,6 +31,7 @@ class HorizonJ6PAdapter(BasePlatformAdapter):
             "container": self.CONTAINER_NAME,
             "march": self.MARCH,
         }
+
 
     def compile_model(
         self,
@@ -102,13 +114,21 @@ class HorizonJ6PAdapter(BasePlatformAdapter):
                 "stderr": compile_result.stderr,
             }
 
+        # 解析编译性能信息
+        # Parse compile performance information.
+        performance = parse_horizon_compile_output(
+            compile_result.stdout
+        )
+
         return {
             "status": "success",
             "platform": "J6P",
             "model_path": str(model),
             "config_path": str(config_path),
             "hbm_path": str(hbm_path),
+            **performance,
         }
+
 
     def deploy_model(
         self,
@@ -127,18 +147,21 @@ class HorizonJ6PAdapter(BasePlatformAdapter):
                 f"J6P 部署模型必须是 .hbm: {model}"
             )
 
-        remote_dir = "/root/hehailong/mcp_test"
+        # 获取 SSH 主机配置
+        # Get SSH host configuration.
+        ssh_host = self.PLATFORM_CONFIG["ssh_host"]
+
+        # 获取板端部署目录
+        # Get remote deployment directory.
+        remote_dir = self.PLATFORM_CONFIG["remote_dir"]
         remote_path = f"{remote_dir}/{model.name}"
 
         result = subprocess.run(
             [
                 "scp",
                 str(model),
-                f"j6p:{remote_path}",
+                f"{ssh_host}:{remote_path}",
             ],
-            capture_output=True,
-            text=True,
-            timeout=120,
         )
 
         if result.returncode != 0:
@@ -172,8 +195,12 @@ class HorizonJ6PAdapter(BasePlatformAdapter):
                 f"J6P 验证模型必须是 .hbm: {model}"
             )
 
+        # 获取板端部署目录
+        # Get remote deployment directory.
+        remote_dir = self.PLATFORM_CONFIG["remote_dir"]
+
         remote_path = (
-            f"/root/hehailong/mcp_test/{model.name}"
+            f"{remote_dir}/{model.name}"
         )
 
         result = subprocess.run(

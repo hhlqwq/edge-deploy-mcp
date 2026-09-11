@@ -1,3 +1,22 @@
-*.pyc
-.vscode/
+# Python
 __pycache__/
+*.pyc
+
+# Virtual environment
+.env
+.conda/
+
+# Test output
+test_output/
+tmp/
+
+# Model files
+*.onnx
+*.hbm
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
