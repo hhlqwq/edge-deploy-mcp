@@ -138,9 +138,28 @@ class MTKG720Adapter(BasePlatformAdapter):
                 "stderr": result.stderr,
             }
 
+        # G720 deployment uses the complete model package directory.
+        # G720 部署阶段使用完整模型工程目录。
+        deploy_path = model.parent.parent
+
         return {
             "status": "success",
             "platform": "G720",
+
+            # Source model path.
+            # 原始模型路径。
+            "model_path": str(model),
+
+            # Primary compiled artifact.
+            # 主要编译产物。
+            "artifact_path": str(output_path),
+
+            # Path used by the deployment stage.
+            # 后续部署阶段使用的模型工程目录。
+            "deploy_path": str(deploy_path),
+
+            # Platform-specific compatibility fields.
+            # 保留平台特有字段，兼容现有代码。
             "tflite_path": str(model),
             "dla_path": str(output_path),
         }
@@ -303,7 +322,7 @@ class MTKG720Adapter(BasePlatformAdapter):
                 "stdout": result.stdout,
             }
 
-                # Collect benchmark result.
+        # Collect benchmark result.
         # 获取性能测试结果。
         benchmark_log = (
             f"{remote_dir}/output/benchmark.log"

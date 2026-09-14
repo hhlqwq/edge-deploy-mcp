@@ -138,34 +138,37 @@ def compile_model(
 @mcp.tool()
 def deploy_model(
     platform: str,
-    model_path: str,
+    deploy_path: str,
 ) -> dict:
     """
-    将编译后的模型部署到目标边缘AI板
-    Deploy a compiled model to the target edge AI board.
+    将编译产物或部署包部署到目标边缘 AI 板。
+
+    Deploy a compiled artifact or deployment package
+    to the target edge AI board.
     """
 
     adapter = get_adapter(platform)
 
     return adapter.deploy_model(
-        model_path=model_path,
+        deploy_path,
     )
 
 
 @mcp.tool()
 def verify_model(
     platform: str,
-    model_path: str,
+    deploy_path: str,
 ) -> dict:
     """
-    验证目标板上的已部署模型
-    Verify deployed model on target board.
+    验证目标板上已经部署的模型。
+
+    Verify the deployed model on the target board.
     """
 
     adapter = get_adapter(platform)
 
     return adapter.verify_model(
-        model_path=model_path,
+        deploy_path,
     )
 
 

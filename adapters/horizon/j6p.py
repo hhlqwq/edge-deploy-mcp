@@ -123,9 +123,24 @@ class HorizonJ6PAdapter(BasePlatformAdapter):
         return {
             "status": "success",
             "platform": "J6P",
+
+            # Source model path.
+            # 原始模型路径。
             "model_path": str(model),
+
+            # Primary compiled artifact.
+            # 主要编译产物。
+            "artifact_path": str(hbm_path),
+
+            # Path used by the deployment stage.
+            # 后续部署阶段使用的路径。
+            "deploy_path": str(hbm_path),
+
+            # Platform-specific compatibility fields.
+            # 保留平台特有字段，兼容现有代码。
             "config_path": str(config_path),
             "hbm_path": str(hbm_path),
+
             **performance,
         }
 
