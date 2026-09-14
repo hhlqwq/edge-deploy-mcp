@@ -146,17 +146,14 @@ class MTKG720Adapter(BasePlatformAdapter):
         }
 
 
-    def deploy_model(
-        self,
-        model_root: str,
-    ) -> dict:
+    def deploy_model(self, model_path: str) -> dict:
         """
         Deploy G720 inference package to board.
 
         部署 G720 推理工程到开发板。
         """
 
-        root = Path(model_root)
+        root = Path(model_path)
 
         dla_file = (
             root
@@ -263,17 +260,14 @@ class MTKG720Adapter(BasePlatformAdapter):
         }
 
 
-    def verify_model(
-        self,
-        model_root: str,
-    ) -> dict:
+    def verify_model(self, model_path: str) -> dict:
         """
         Run G720 board inference verification.
 
         执行 G720 板端推理验证。
         """
 
-        root = Path(model_root)
+        root = Path(model_path)
 
         remote_dir = (
             f"{self.REMOTE_DIR}/"
