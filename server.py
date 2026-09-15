@@ -250,18 +250,57 @@ def deploy_pipeline(
 
     return {
         "status": "success",
+
+        # Platform name.
+        # 平台名称。
         "platform": compile_result.get(
             "platform",
             platform,
         ),
+
+        # Original model.
+        # 原始模型路径。
         "model_path": model_path,
-        "artifact_path": compile_result.get(
-            "artifact_path"
-        ),
-        "deploy_path": deploy_path,
-        "compile": compile_result,
-        "deploy": deploy_result,
-        "verify": verify_result,
+
+        # Compiled artifact information.
+        # 编译产物信息。
+        "artifact": {
+            "path": compile_result.get(
+                "artifact_path"
+            ),
+        },
+
+        # Deployment information.
+        # 部署信息。
+        "deployment": {
+            "status": deploy_result.get(
+                "status"
+            ),
+            "remote_path": (
+                deploy_result.get("remote_path")
+                or deploy_result.get("remote_dir")
+            ),
+        },
+
+        # Verification information.
+        # 验证信息。
+        "verification": {
+            "type": verify_result.get(
+                "verification_type"
+            ),
+
+            "metrics": verify_result.get(
+                "metrics"
+            ),
+        },
+
+        # Detailed platform-specific results.
+        # 保留平台详细信息。
+        "details": {
+            "compile": compile_result,
+            "deploy": deploy_result,
+            "verify": verify_result,
+        },
     }
 
 

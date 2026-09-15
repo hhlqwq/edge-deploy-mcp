@@ -378,8 +378,23 @@ class MTKG720Adapter(BasePlatformAdapter):
         return {
             "status": "success",
             "platform": "G720",
-            "remote_dir": remote_dir,
-            "fps": fps,
-            "latency_ms": latency_ms,
+
+            # Verification method.
+            # 验证类型：真实运行时推理。
+            "verification_type": "runtime_inference",
+
+            # Board deployment location.
+            # 板端部署目录。
+            "remote_path": remote_dir,
+
+            # Runtime benchmark metrics.
+            # 运行时性能指标。
+            "metrics": {
+                "fps": fps,
+                "latency_ms": latency_ms,
+            },
+
+            # Benchmark result log.
+            # 性能测试日志。
             "benchmark_log": benchmark_log,
         }
