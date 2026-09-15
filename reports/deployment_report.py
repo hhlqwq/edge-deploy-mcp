@@ -6,6 +6,7 @@ from zoneinfo import ZoneInfo
 
 def build_deployment_report(
     pipeline_result: dict,
+    environment: dict = None,
 ) -> dict:
     """
     Build a normalized deployment report from pipeline result.
@@ -56,6 +57,10 @@ def build_deployment_report(
         "verification": pipeline_result.get(
             "verification"
         ),
+
+        # Deployment environment information.
+        # 部署环境信息。
+        "environment": environment,
     }
 
 

@@ -87,6 +87,13 @@ async def test_g720_deploy_pipeline():
         assert '"generated_at"' in report_text
         assert "+08:00" in report_text
 
+        # Verify deployment environment information.
+        # 验证部署环境信息。
+        assert '"environment"' in report_text
+        assert '"compiler": "ncc-tflite"' in report_text
+        assert '"runtime": "NeuronRT"' in report_text
+        assert '"accelerator": "MDLA 5.3"' in report_text
+
         print(
             "[PASS] G720 deploy pipeline"
         )

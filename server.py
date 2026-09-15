@@ -253,6 +253,25 @@ def deploy_pipeline(
             "verify": verify_result,
         }
     
+    # Build platform-specific deployment environment information.
+    # 构建平台相关的部署环境信息。
+    platform_key = platform.lower()
+
+    if platform_key == "g720":
+        environment = {
+            "compiler": "ncc-tflite",
+            "runtime": "NeuronRT",
+            "accelerator": "MDLA 5.3",
+        }
+    elif platform_key == "j6p":
+        environment = {
+            "compiler": "hb_compile",
+            "runtime": "Horizon Runtime",
+            "march": "nash-p",
+        }
+    else:
+        environment = None
+
     # Build normalized deployment report.
     # 构建统一部署报告。
     report = build_deployment_report(
@@ -285,7 +304,10 @@ def deploy_pipeline(
                     "benchmark"
                 ),
             },
-        }
+        },
+        # Deployment environment information.
+        # 部署环境信息。
+        environment=environment,
     )
 
     # Use report generation time in the file name.
