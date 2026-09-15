@@ -59,8 +59,16 @@ async def test_g720_deploy_pipeline():
         report_path = Path(
             "test_output/g720_deployment_report.json"
         )
-
         assert report_path.exists()
+
+        # Verify report generation time.
+        # 验证报告生成时间。
+        report_text = report_path.read_text(
+            encoding="utf-8"
+        )
+
+        assert '"generated_at"' in report_text
+        assert "+08:00" in report_text
 
         print(
             "[PASS] G720 deploy pipeline"

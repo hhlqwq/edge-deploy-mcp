@@ -1,5 +1,7 @@
 import json
 from pathlib import Path
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 
 def build_deployment_report(
@@ -14,9 +16,20 @@ def build_deployment_report(
     # Build normalized report structure.
     # 构建统一的报告结构。
     return {
+        # Report generation time in China Standard Time.
+        # 报告生成时间，使用北京时间。
+        "generated_at": datetime.now(
+            ZoneInfo("Asia/Shanghai")
+        ).isoformat(),
+
+        # Pipeline execution status.
+        # Pipeline 执行状态。
         "status": pipeline_result.get(
             "status"
         ),
+
+        # Target platform.
+        # 目标平台。
         "platform": pipeline_result.get(
             "platform"
         ),
