@@ -4,6 +4,11 @@ import onnx
 from onnx import TensorProto
 from mcp.server import MCPServer
 from adapters.registry import get_adapter
+from reports.deployment_report import (
+    build_deployment_report,
+    save_deployment_report,
+)
+
 
 mcp = MCPServer("edge-deploy-mcp")
 
@@ -247,6 +252,51 @@ def deploy_pipeline(
             "deploy": deploy_result,
             "verify": verify_result,
         }
+    
+    # Build normalized deployment report.
+    # 构建统一部署报告。
+    report = build_deployment_report(
+        pipeline_result={
+            "status": "success",
+            "platform": compile_result.get(
+                "platform",
+                platform,
+            ),
+            "model_path": model_path,
+            "artifact": {
+                "path": compile_result.get(
+                    "artifact_path"
+                ),
+            },
+            "deployment": {
+                "status": deploy_result.get(
+                    "status"
+                ),
+                "remote_path": (
+                    deploy_result.get("remote_path")
+                    or deploy_result.get("remote_dir")
+                ),
+            },
+            "verification": {
+                "type": verify_result.get(
+                    "verification_type"
+                ),
+                "benchmark": verify_result.get(
+                    "benchmark"
+                ),
+            },
+        }
+    )
+
+    # Save deployment report.
+    # 保存部署报告。
+    report_path = save_deployment_report(
+        report=report,
+        output_path=(
+            "test_output/"
+            f"{platform}_deployment_report.json"
+        ),
+    )
 
     return {
         "status": "success",
@@ -305,6 +355,13 @@ def deploy_pipeline(
             "compile": compile_result,
             "deploy": deploy_result,
             "verify": verify_result,
+        },
+
+        # Deployment report information.
+        # 部署报告信息。
+        "report": {
+            "path": report_path,
+            "content": report,
         },
     }
 

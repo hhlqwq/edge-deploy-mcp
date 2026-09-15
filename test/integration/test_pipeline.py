@@ -1,8 +1,8 @@
 import asyncio
 
 from mcp import Client
-
 from server import mcp
+from pathlib import Path
 
 
 # G720 INT8 TFLite model used for pipeline integration testing.
@@ -53,6 +53,14 @@ async def test_g720_deploy_pipeline():
         assert '"benchmark"' in text
         assert '"latency"' in text
         assert '"throughput"' in text
+
+        # Verify deployment report was generated.
+        # 验证部署报告已经生成。
+        report_path = Path(
+            "test_output/g720_deployment_report.json"
+        )
+
+        assert report_path.exists()
 
         print(
             "[PASS] G720 deploy pipeline"
