@@ -54,10 +54,10 @@ async def test_g720_deploy_pipeline():
         assert '"latency"' in text
         assert '"throughput"' in text
 
-        # Verify deployment report was generated.
-        # 验证部署报告已经生成。
+        # Deployment report output path.
+        # 部署报告输出路径。
         report_path = Path(
-            "test_output/g720_deployment_report.json"
+            "outputs/reports/g720_deployment_report.json"
         )
         assert report_path.exists()
 

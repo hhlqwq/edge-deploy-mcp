@@ -288,12 +288,12 @@ def deploy_pipeline(
         }
     )
 
-    # Save deployment report.
-    # 保存部署报告。
+    # Save deployment report to runtime output directory.
+    # 将部署报告保存到运行时输出目录。
     report_path = save_deployment_report(
         report=report,
         output_path=(
-            "test_output/"
+            "outputs/reports/"
             f"{platform}_deployment_report.json"
         ),
     )

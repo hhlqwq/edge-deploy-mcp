@@ -20,3 +20,7 @@ tmp/
 # IDE
 .vscode/
 .idea/
+
+# Runtime outputs.
+# 运行时输出。
+outputs/
