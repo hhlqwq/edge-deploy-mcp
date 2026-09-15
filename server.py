@@ -288,13 +288,19 @@ def deploy_pipeline(
         }
     )
 
-    # Save deployment report to runtime output directory.
-    # 将部署报告保存到运行时输出目录。
+    # Use report generation time in the file name.
+    # 使用报告生成时间生成唯一文件名。
+    report_time = (
+        report["generated_at"]
+        .replace(":", "")
+        .replace("-", "")
+    )
+
     report_path = save_deployment_report(
         report=report,
         output_path=(
             "outputs/reports/"
-            f"{platform}_deployment_report.json"
+            f"{platform}_{report_time}_deployment_report.json"
         ),
     )
 

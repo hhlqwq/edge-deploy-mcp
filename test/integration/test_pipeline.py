@@ -54,10 +54,27 @@ async def test_g720_deploy_pipeline():
         assert '"latency"' in text
         assert '"throughput"' in text
 
-        # Deployment report output path.
-        # 部署报告输出路径。
-        report_path = Path(
-            "outputs/reports/g720_deployment_report.json"
+        # Find generated deployment reports.
+        # 查找生成的部署报告。
+        report_dir = Path(
+            "outputs/reports"
+        )
+
+        report_files = list(
+            report_dir.glob(
+                "g720_*_deployment_report.json"
+            )
+        )
+
+        # At least one deployment report should exist.
+        # 至少应该生成一个部署报告。
+        assert report_files
+
+        # Use the latest generated deployment report.
+        # 使用最新生成的部署报告。
+        report_path = max(
+            report_files,
+            key=lambda path: path.stat().st_mtime,
         )
         assert report_path.exists()
 
