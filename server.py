@@ -285,12 +285,17 @@ def deploy_pipeline(
         # Verification information.
         # 验证信息。
         "verification": {
+
+            # Verification type.
+            # 验证类型。
             "type": verify_result.get(
                 "verification_type"
             ),
 
-            "metrics": verify_result.get(
-                "metrics"
+            # Benchmark result.
+            # 性能测试结果。
+            "benchmark": verify_result.get(
+                "benchmark"
             ),
         },
 

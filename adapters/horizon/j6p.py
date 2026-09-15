@@ -244,16 +244,16 @@ class HorizonJ6PAdapter(BasePlatformAdapter):
             # 验证类型：部署产物检查。
             "verification_type": "artifact_check",
 
-            # Board deployed artifact path.
+            # Board deployment location.
             # 板端模型路径。
             "remote_path": remote_path,
 
-            # J6P currently does not provide runtime benchmark.
-            # 当前 J6P 尚未实现板端 Runtime Benchmark。
-            "metrics": None,
+            # J6P currently has no runtime benchmark.
+            # 当前 J6P 尚未实现板端运行性能测试。
+            "benchmark": None,
 
             # Artifact information.
-            # 文件信息。
+            # 部署产物信息。
             "artifact": {
                 "info": result.stdout.strip(),
             },

@@ -36,10 +36,23 @@ async def test_g720_deploy_pipeline():
 
         assert '"status": "success"' in text
         assert '"platform": "G720"' in text
-        assert '"artifact_path"' in text
-        assert '"deploy_path"' in text
-        assert '"fps"' in text
-        assert '"latency_ms"' in text
+        # Verify artifact information.
+        # 验证编译产物信息。
+        assert '"artifact"' in text
+
+        # Verify deployment information.
+        # 验证部署信息。
+        assert '"deployment"' in text
+
+        # Verify verification information.
+        # 验证模型验证信息。
+        assert '"verification"' in text
+
+        # Verify runtime benchmark result.
+        # 验证运行时性能测试结果。
+        assert '"benchmark"' in text
+        assert '"latency"' in text
+        assert '"throughput"' in text
 
         print(
             "[PASS] G720 deploy pipeline"

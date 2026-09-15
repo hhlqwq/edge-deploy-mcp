@@ -387,11 +387,27 @@ class MTKG720Adapter(BasePlatformAdapter):
             # 板端部署目录。
             "remote_path": remote_dir,
 
-            # Runtime benchmark metrics.
-            # 运行时性能指标。
-            "metrics": {
-                "fps": fps,
-                "latency_ms": latency_ms,
+            # Runtime benchmark result.
+            # 运行时性能测试结果。
+            "benchmark": {
+
+                # Benchmark type.
+                # 性能测试类型。
+                "type": "runtime",
+
+                # Inference latency.
+                # 单次推理延迟。
+                "latency": {
+                    "value": latency_ms,
+                    "unit": "ms",
+                },
+
+                # Inference throughput.
+                # 推理吞吐。
+                "throughput": {
+                    "value": fps,
+                    "unit": "fps",
+                },
             },
 
             # Benchmark result log.
