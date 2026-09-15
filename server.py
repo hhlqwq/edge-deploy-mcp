@@ -172,5 +172,98 @@ def verify_model(
     )
 
 
+@mcp.tool()
+def deploy_pipeline(
+    platform: str,
+    model_path: str,
+) -> dict:
+    """
+    执行模型编译、部署和验证完整流程。
+
+    Run the complete model compile, deploy,
+    and verification pipeline.
+    """
+
+    # Get target platform adapter.
+    # 获取目标平台适配器。
+    adapter = get_adapter(platform)
+
+    # Step 1: Compile model.
+    # 第一步：编译模型。
+    compile_result = adapter.compile_model(
+        model_path=model_path,
+    )
+
+    if compile_result.get("status") != "success":
+        return {
+            "status": "failed",
+            "platform": platform,
+            "stage": "compile",
+            "compile": compile_result,
+        }
+
+    deploy_path = compile_result.get(
+        "deploy_path"
+    )
+
+    if not deploy_path:
+        return {
+            "status": "failed",
+            "platform": platform,
+            "stage": "compile",
+            "reason": (
+                "compile_model() did not return deploy_path"
+            ),
+            "compile": compile_result,
+        }
+
+    # Step 2: Deploy compiled artifact or package.
+    # 第二步：部署编译产物或部署包。
+    deploy_result = adapter.deploy_model(
+        deploy_path,
+    )
+
+    if deploy_result.get("status") != "success":
+        return {
+            "status": "failed",
+            "platform": platform,
+            "stage": "deploy",
+            "compile": compile_result,
+            "deploy": deploy_result,
+        }
+
+    # Step 3: Verify deployed model on target board.
+    # 第三步：在目标板验证部署后的模型。
+    verify_result = adapter.verify_model(
+        deploy_path,
+    )
+
+    if verify_result.get("status") != "success":
+        return {
+            "status": "failed",
+            "platform": platform,
+            "stage": "verify",
+            "compile": compile_result,
+            "deploy": deploy_result,
+            "verify": verify_result,
+        }
+
+    return {
+        "status": "success",
+        "platform": compile_result.get(
+            "platform",
+            platform,
+        ),
+        "model_path": model_path,
+        "artifact_path": compile_result.get(
+            "artifact_path"
+        ),
+        "deploy_path": deploy_path,
+        "compile": compile_result,
+        "deploy": deploy_result,
+        "verify": verify_result,
+    }
+
+
 if __name__ == "__main__":
     mcp.run()
